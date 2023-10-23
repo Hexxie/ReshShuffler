@@ -91,3 +91,6 @@ if __name__ == '__main__':
     if args.delete:
         #provide event_id here
         remove_event(args.delete, 1)
+
+    #to run from shortcut
+    x = input()
