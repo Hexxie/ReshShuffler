@@ -6,22 +6,6 @@ con = sqlite3.connect("restEvents.db")
 
 cur = con.cursor()
 
-events = [
-    "walking on the treadmill",
-    "walking outside",
-    "grab some coffee in the coffeshop",
-    "brew some hand brewed coffee",
-    "tea time",
-    "abs workout",
-    "pull ups",
-    "push ups",
-    "handstand",
-    "headstand",
-    "stretching",
-    "lay on the bed with closed eyes",
-    "lay on the bed with some music",
-    "guided meditation"]
-
 def add_event(event, user_id):
     print(f"""INSERT INTO REST_EVENT 
                  (name, counter, last_date, user_id )
@@ -75,4 +59,4 @@ if __name__ == '__main__':
 
     if args.delete:
         #provide event_id here
-        remove_event(args.delete)
+        remove_event(args.delete, 1)
