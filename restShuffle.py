@@ -4,7 +4,7 @@ import argparse
 import datetime
 from dateutil import parser
 
-con = sqlite3.connect("restEvents.db", detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+con = sqlite3.connect("restEvents.db")
 
 cur = con.cursor()
 
