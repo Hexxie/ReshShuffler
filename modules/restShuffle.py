@@ -1,20 +1,29 @@
-from random import shuffle
+import os
 import sqlite3
 import datetime
 from dateutil import parser
+from random import shuffle
 
 con = sqlite3.connect("data/restEvents.db")
 
 cur = con.cursor()
 
+sql_file = open("data/restEvents.sql")
+sql_script = sql_file.read()
+cur.executescript(sql_script)
+
 def add_event(event, user_id):
-    print(f"""INSERT INTO REST_EVENT 
-                 (name, counter, last_date, user_id )
-                 VALUES ('{event}', '0', NULL, '{user_id}')""")
-    cur.execute(f"""INSERT INTO REST_EVENT 
-                 (name, counter, last_date, user_id )
-                 VALUES ('{event}', '0', NULL, '{user_id}')""")
-    con.commit()
+    res = cur.execute(f"SELECT user_id from USER WHERE user_id = {user_id}")
+    if not res.fetchall():
+        print("User not found")
+    else:
+        print(f"""INSERT INTO REST_EVENT 
+                    (name, counter, last_date, user_id )
+                    VALUES ('{event}', '0', NULL, '{user_id}')""")
+        cur.execute(f"""INSERT INTO REST_EVENT 
+                    (name, counter, last_date, user_id )
+                    VALUES ('{event}', '0', NULL, '{user_id}')""")
+        con.commit()
 
 def list_all_events():
     res = cur.execute(f"""SELECT USER.name, REST_EVENT.name, REST_EVENT.counter, REST_EVENT.event_id, REST_EVENT.last_date
