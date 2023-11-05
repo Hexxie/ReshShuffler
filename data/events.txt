@@ -1,15 +1,14 @@
-events = [
-    "walking on the treadmill",
-    "walking outside",
-    "grab some coffee in the coffeshop",
-    "brew some hand brewed coffee",
-    "tea time",
-    "abs workout",
-    "pull ups",
-    "push ups",
-    "handstand",
-    "headstand",
-    "stretching",
-    "lay on the bed with closed eyes",
-    "lay on the bed with some music",
-    "guided meditation"]
+walking on the treadmill
+walking outside
+grab some coffee in the coffeshop
+brew some hand brewed coffee
+tea time
+abs workout
+pull ups
+push ups
+handstand
+headstand
+stretching
+lay on the bed with closed eyes
+lay on the bed with some music
+guided meditation

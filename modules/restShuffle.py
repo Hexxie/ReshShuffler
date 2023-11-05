@@ -71,6 +71,10 @@ def get_shuffled_event(user_id):
     update_event(user_id, event_id, count, datetime.datetime.now())
     return event_name
 
+def add_events_from_file(file, user_id):
+    with open(file) as f:
+        [add_event(line, user_id) for line in f.readlines()]
+
 if __name__ == '__main__':
     #to run from the shortcut
     print()
