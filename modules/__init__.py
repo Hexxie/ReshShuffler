@@ -1,1 +1,1 @@
-from .restShuffle import *
+from .restShuffler.restShuffle import *
