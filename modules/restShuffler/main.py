@@ -1,7 +1,8 @@
 import argparse
 import sys
 import os
-from modules import *
+import rest_shuffle
+from rest_shuffle import Event
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
@@ -17,26 +18,28 @@ if __name__ == '__main__':
 
     args = arg_parser.parse_args()
 
+    events = Event()
+
     if args.list:
-        print(list_all_events())
+        print(events.find_all())
     
     if args.today:
-        print(list_all_events_today())
+        print(events.find_today())
 
     if args.add:
-        add_event(args.add, 1)
+        events.add(args.add)
 
     if args.rest:
         print()
-        print(get_shuffled_event(1))
+        print(rest_shuffle.get_shuffled_event(1))
 
     if args.delete:
         #provide event_id here
-        remove_event(args.delete, 1)
+        events.remove(args.delete)
 
     if args.fill:
         if os.path.isfile(args.fill):
             print(f"File {args.fill} was found")
-            add_events_from_file(args.fill, 1)
+            rest_shuffle.add_events_from_file(args.fill, 1)
         else:
             print("File is not found")

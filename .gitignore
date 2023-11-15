@@ -1,5 +1,6 @@
 venv/*
 modules/__pycache__/*
+modules/__pycache__/restShuffler/__pycache__/*
 .DS_Store
 data/.DS_Store
 config.yml
