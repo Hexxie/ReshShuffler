@@ -3,8 +3,44 @@ import sqlite_db
 from dateutil import parser
 from random import shuffle
 
-class Event():
+class User:
+    def __init__(self, telegram_id = None, user_id = 1):
+        self._cur = sqlite_db.db.get_cursor()
+        self._con = sqlite_db.db.get_connection()
+        self.telegram_id = telegram_id
+        self.user_id = user_id
+        self.name = "default"
+        self.is_exists = False
 
+        if telegram_id is not None:
+            res = self.find_by_telegram_id()
+            if res:
+                self.user_id = res[0][0]
+                self.name = res[0][1]
+                self.is_exists = True
+
+    def add(self, name, telegram_id = None):
+        res = self._cur.execute(f"SELECT telegram_id from USER WHERE telegram_id = {telegram_id}")
+        if not res.fetchall():
+            print(f"""INSERT INTO USER
+                        (name, telegram_id )
+                        VALUES ('{name}','{telegram_id}')""")
+            self._cur.execute(f"""INSERT INTO USER 
+                        (name, telegram_id )
+                        VALUES ('{name}','{telegram_id}')""")
+            self._con.commit()
+            self.name = name
+            self.telegram_id = telegram_id
+
+    def find_by_telegram_id(self):
+        res = self._cur.execute(f"""
+                                SELECT user_id, name from USER
+                                WHERE telegram_id = '{self.telegram_id}'""")
+        data = res.fetchall()
+        print(f"the list {data}")
+        return data
+
+class Event:
     def __init__(self, user_id = 1):
         self.user_id = user_id
         self._cur = sqlite_db.db.get_cursor()
@@ -81,3 +117,5 @@ if __name__ == '__main__':
     print()
     print(get_shuffled_event(1))
     x = input()
+    user = User(123)
+    print(user.find_by_telegram_id(123))
