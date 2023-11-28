@@ -19,7 +19,7 @@ class Event():
             print(f"""INSERT INTO {self.table} 
                         (name, counter, last_date, user_id )
                         VALUES ('{event}', '0', NULL, '{self.user_id}')""")
-            self._cur.execute(f"""INSERT INTO REST_EVENT 
+            self._cur.execute(f"""INSERT INTO {self.table} 
                         (name, counter, last_date, user_id )
                         VALUES ('{event}', '0', NULL, '{self.user_id}')""")
             self._con.commit()
