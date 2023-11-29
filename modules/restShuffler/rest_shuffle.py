@@ -4,13 +4,13 @@ from dateutil import parser
 from random import shuffle
 
 class User:
-    def __init__(self, telegram_id = None, user_id = 1):
+    def __init__(self, telegram_id = None):
         self._cur = sqlite_db.db.get_cursor()
         self._con = sqlite_db.db.get_connection()
         self.telegram_id = telegram_id
-        self.user_id = user_id
         self.name = "default"
         self.is_exists = False
+        self.user_id = None
 
         if telegram_id is not None:
             res = self.find_by_telegram_id()
@@ -29,8 +29,12 @@ class User:
                         (name, telegram_id )
                         VALUES ('{name}','{telegram_id}')""")
             self._con.commit()
-            self.name = name
             self.telegram_id = telegram_id
+            res = self.find_by_telegram_id()
+            if res:
+                self.user_id = res[0][0]
+                self.name = res[0][1]
+                self.is_exists = True
 
     def find_by_telegram_id(self):
         res = self._cur.execute(f"""
@@ -41,7 +45,7 @@ class User:
         return data
 
 class Event:
-    def __init__(self, user_id = 1, table='REST_EVENT'):
+    def __init__(self, user_id, table='REST_EVENT'):
         self.user_id = user_id
         self.table = table
         self._cur = sqlite_db.db.get_cursor()
@@ -72,6 +76,7 @@ class Event:
 
     def find_all(self):
         print(self.table)
+        print(f"User id to find: {self.user_id}")
         res = self._cur.execute(f"""
                                 SELECT USER.name, {self.table}.name, {self.table}.counter, {self.table}.event_id, {self.table}.last_date
                                 FROM USER 
