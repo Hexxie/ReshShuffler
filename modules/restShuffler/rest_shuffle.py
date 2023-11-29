@@ -41,8 +41,9 @@ class User:
         return data
 
 class Event:
-    def __init__(self, user_id = 1):
+    def __init__(self, user_id = 1, table='REST_EVENT'):
         self.user_id = user_id
+        self.table = table
         self._cur = sqlite_db.db.get_cursor()
         self._con = sqlite_db.db.get_connection()
 
@@ -51,29 +52,30 @@ class Event:
         if not res.fetchall():
             print("User not found")
         else:
-            print(f"""INSERT INTO REST_EVENT 
+            print(f"""INSERT INTO {self.table} 
                         (name, counter, last_date, user_id )
                         VALUES ('{event}', '0', NULL, '{self.user_id}')""")
-            self._cur.execute(f"""INSERT INTO REST_EVENT 
+            self._cur.execute(f"""INSERT INTO {self.table} 
                         (name, counter, last_date, user_id )
                         VALUES ('{event}', '0', NULL, '{self.user_id}')""")
             self._con.commit()
 
     def update(self, event_id, counter, date):
-        self._cur.execute(f"""UPDATE REST_EVENT 
+        self._cur.execute(f"""UPDATE {self.table} 
                 SET counter = '{counter}', last_date = '{date}'
                 WHERE event_id = '{event_id}' AND user_id = '{self.user_id}'""")
         self._con.commit()
 
     def remove(self, event_id):
-        self._cur.execute(f"""DELETE FROM REST_EVENT WHERE event_id = '{event_id}' AND user_id = '{self.user_id}'""")
+        self._cur.execute(f"""DELETE FROM {self.table} WHERE event_id = '{event_id}' AND user_id = '{self.user_id}'""")
         self._con.commit()
 
     def find_all(self):
+        print(self.table)
         res = self._cur.execute(f"""
-                                SELECT USER.name, REST_EVENT.name, REST_EVENT.counter, REST_EVENT.event_id, REST_EVENT.last_date
+                                SELECT USER.name, {self.table}.name, {self.table}.counter, {self.table}.event_id, {self.table}.last_date
                                 FROM USER 
-                                INNER JOIN REST_EVENT ON USER.user_id = REST_EVENT.user_id
+                                INNER JOIN {self.table} ON USER.user_id = {self.table}.user_id
                                 WHERE USER.user_id = '{self.user_id}'""")
         return res.fetchall()
     
@@ -91,8 +93,8 @@ class Event:
         return events
 
 
-def get_shuffled_event(user_id):
-    events = Event(user_id)
+def get_shuffled_event(user_id, table='REST_EVENT'):
+    events = Event(user_id, table)
     all_events = events.find_today()
     if not all_events:
         return "I run out of the events. You can choose whatever you want!"
@@ -107,8 +109,8 @@ def get_shuffled_event(user_id):
     events.update(event_id, count, datetime.datetime.now())
     return event_name
 
-def add_events_from_file(file, user_id):
-    events = Event(user_id)
+def add_events_from_file(file, user_id, table):
+    events = Event(user_id, table)
     with open(file) as f:
         [events.add(line) for line in f.readlines()]
 
