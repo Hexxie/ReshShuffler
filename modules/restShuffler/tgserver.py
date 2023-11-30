@@ -7,6 +7,8 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 from rest_shuffle import User
 from rest_shuffle import get_shuffled_event, add_events_from_file
 
+from pathlib import Path
+
 # Enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -28,8 +30,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not user.is_exists:
         print("Unknown user. Adding into DB")
         user.add(update.effective_user.first_name, update.effective_user.id)
-        add_events_from_file("../../data/restEvents.txt", user.user_id, 'REST_EVENT')
-        add_events_from_file("../../data/workEvents.txt", user.user_id, 'WORK_EVENT')
+        add_events_from_file(Path(__file__).parent / "../../data/restEvents.txt", user.user_id, 'REST_EVENT')
+        add_events_from_file(Path(__file__).parent / "../../data/workEvents.txt", user.user_id, 'WORK_EVENT')
 
     reply_keyboard = [["Rest", "Work"]]
 
@@ -73,7 +75,7 @@ async def event_shuffle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 def main() -> None:
     """Start the bot."""
-    with open('../../config/config.yml', 'r') as file:
+    with open(Path(__file__).parent / '../../config/config.yml', 'r') as file:
         text = yaml.safe_load(file)
         print (text)
 
